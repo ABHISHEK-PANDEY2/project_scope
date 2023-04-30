@@ -1,5 +1,6 @@
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
+import { Link } from "react-router-dom";
 
 const signupSchema = Yup.object().shape({
   username: Yup.string().required("Please fill this field").min(4),
@@ -9,7 +10,8 @@ const signupSchema = Yup.object().shape({
   password: Yup.string().required("Please fill this field").min(10),
 });
 
-const AuthForm = () => {
+const AuthForm = (props) => {
+  const { type } = props;
   return (
     <>
       <Formik
@@ -23,17 +25,19 @@ const AuthForm = () => {
       >
         {({ errors, touched, isSubmitting }) => (
           <Form className="flex flex-col gap-3">
-            <div>
-              <Field
-                className="bg-[#F5F5F5] h-16 w-full rounded-md px-3 outline-none"
-                name="username"
-                type="text"
-                placeholder="Username"
-              />
-              {errors.username && touched.username ? (
-                <div className=" text-red-600">{errors.username}</div>
-              ) : null}
-            </div>
+            {type == "signup" && (
+              <div>
+                <Field
+                  className="bg-[#F5F5F5] h-16 w-full rounded-md px-3 outline-none"
+                  name="username"
+                  type="text"
+                  placeholder="Username"
+                />
+                {errors.username && touched.username ? (
+                  <div className=" text-red-600">{errors.username}</div>
+                ) : null}
+              </div>
+            )}
             <div>
               <Field
                 className="bg-[#F5F5F5] h-16 w-full rounded-md px-3 outline-none"
@@ -57,14 +61,22 @@ const AuthForm = () => {
               ) : null}
             </div>
             <button className="h-16 w-full bg-[#2F3538] hover:bg-gray-700 text-white rounded-md">
-              Sign Up
+              {type == "signup" ? "Sign Up" : "Continue"}
             </button>
           </Form>
         )}
       </Formik>
       <div className="flex gap-2 w-full justify-center mt-3">
         <span>Already a member?</span>
-        <span className="font-bold underline">Log in</span>
+        {type == "signup" ? (
+          <Link to="/login">
+            <span className="font-bold underline">Log in</span>
+          </Link>
+        ) : (
+          <Link to="/signup">
+            <span className="font-bold underline">Sign up</span>
+          </Link>
+        )}
       </div>
     </>
   );

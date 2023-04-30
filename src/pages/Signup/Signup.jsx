@@ -2,6 +2,7 @@ import pattern from "../../static/images/login/pattern.svg";
 import logo from "../../static/brand/logo-dark.svg";
 import { FcGoogle } from "react-icons/fc";
 import AuthForm from "../../common/component/form";
+import { SignInPopup } from "../../configs/firebase.config";
 
 const Signup = () => {
   return (
@@ -19,7 +20,10 @@ const Signup = () => {
               Join the Project Scope for free!
             </p>
           </div>
-          <button className="w-full bg-blue-100 rounded-full flex gap-3 justify-center items-center h-14 mt-7 mb-3 outline-none hover:bg-blue-50">
+          <button
+            onClick={SignInPopup}
+            className="w-full bg-blue-100 rounded-full flex gap-3 justify-center items-center h-14 mt-7 mb-3 outline-none hover:bg-blue-50"
+          >
             <FcGoogle /> Signup with Google
           </button>
           <div className="flex gap-3 items-center justify-between">
@@ -28,12 +32,14 @@ const Signup = () => {
             <hr className="flex-auto border-1" />
           </div>
           <div>
-            <AuthForm />
+            <AuthForm type="signup" />
           </div>
         </div>
       </div>
-      <div className="flex-1 h-full overflow-y-hidden lg:block hidden">
-        <img className="ml-auto h-full" src={pattern} alt="" />
+      <div className="flex-1 h-full overflow-y-hidden md:block hidden">
+        <img className="ml-auto" src={pattern} alt="" />
+        <img className="ml-auto " src={pattern} alt="" />
+        <img className="ml-auto" src={pattern} alt="" />
       </div>
     </section>
   );
