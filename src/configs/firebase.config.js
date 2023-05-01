@@ -34,17 +34,17 @@ export async function SignInPopup() {
     const credential = GoogleAuthProvider.credentialFromResult(response);
     const token = credential.accessToken;
     const userData = response.user;
-    console.log({
+    await setDoc(doc(db, "users", userData.uid), {
       uid: userData.uid,
       email: userData.email,
       username: userData.displayName,
     });
-    const user = await setDoc(doc(db, "users", userData.uid), {
+    const userDetails = {
       uid: userData.uid,
       email: userData.email,
       username: userData.displayName,
-    });
-    console.log(user);
+    };
+    return userDetails;
   } catch (error) {
     const errorCode = error.code;
     const errorMessage = error.message;
@@ -60,7 +60,12 @@ export async function LoginPopup() {
     const credential = GoogleAuthProvider.credentialFromResult(response);
     const token = credential.accessToken;
     const user = response.user;
-    console.log(token, user);
+    const userDetails = {
+      uid: user.uid,
+      email: user.email,
+      username: user.displayName,
+    };
+    return userDetails;
   } catch (error) {
     const errorCode = error.code;
     const errorMessage = error.message;

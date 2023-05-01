@@ -1,10 +1,20 @@
+import { useNavigate } from "react-router-dom";
 import pattern from "../../static/images/login/pattern.svg";
 import logo from "../../static/brand/logo-dark.svg";
 import { FcGoogle } from "react-icons/fc";
 import AuthForm from "../../common/component/form";
 import { LoginPopup } from "../../configs/firebase.config";
+import { useUserAuth } from "../../context/userAuthContext";
 
 const Login = () => {
+  const { user, setUser } = useUserAuth();
+  const navigate = useNavigate();
+  const handleClick = async () => {
+    const user = await LoginPopup();
+    setUser(user);
+    navigate("/");
+  };
+
   return (
     <section className="flex w-full h-full">
       <div className="flex-1 w-full flex justify-center items-center px-5">
@@ -21,7 +31,7 @@ const Login = () => {
             </h1>
           </div>
           <button
-            onClick={LoginPopup}
+            onClick={handleClick}
             className="w-full bg-blue-100 rounded-full flex gap-3 justify-center items-center h-14 mt-7 mb-3 outline-none hover:bg-blue-50"
           >
             <FcGoogle /> Log in with Google
