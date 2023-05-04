@@ -5,22 +5,26 @@ import { FaProjectDiagram } from "react-icons/fa";
 import { MdExpandMore, MdExpandLess } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { logout } from "../../../configs/firebase.config";
+import { useUserAuth } from "../../../context/userAuthContext";
 
 const Navbar = () => {
+  const { setUser } = useUserAuth();
   const [isClicked, setIsClicked] = useState(false);
-  const [itemID, setItemID] = useState();
+  const [itemID, setItemID] = useState(0);
   const items = [
     {
       name: "Dashboard",
+      path: "/",
       icon: <RxDashboard />,
       childLinks: [
         {
           name: "Overview",
-          path: "/overview",
+          tab: "overview",
         },
         {
           name: "Calender",
-          path: "/calender",
+          tab: "calender",
         },
       ],
     },
@@ -39,10 +43,6 @@ const Navbar = () => {
       path: "/profile",
       icon: <BiUser />,
     },
-    {
-      name: "Logout",
-      icon: <BiLogOut />,
-    },
   ];
 
   return (
@@ -60,11 +60,12 @@ const Navbar = () => {
                   <Link to={item.path} key={i}>
                     <li
                       className={`flex justify-start items-center px-3 py-1 rounded-md gap-3 text-lg font-bold ${
-                        isClicked && i == itemID ? " bg-[#333A48]" : ""
+                        i == itemID ? " bg-[#333A48]" : ""
                       }`}
                       onClick={() => {
                         setIsClicked((prev) => !prev);
                         setItemID(i);
+                        localStorage.setItem("itemID", i);
                       }}
                     >
                       <span>{item.icon}</span> {item.name}{" "}
@@ -101,6 +102,20 @@ const Navbar = () => {
                 </div>
               );
             })}
+            {/* logout */}
+
+            <li
+              className="flex justify-start items-center px-3 py-1 rounded-md gap-3 text-lg font-bold cursor-pointer"
+              onClick={() => {
+                setUser(null);
+                logout();
+              }}
+            >
+              <span>
+                <BiLogOut />
+              </span>
+              Logout
+            </li>
           </ul>
         </nav>
       </aside>

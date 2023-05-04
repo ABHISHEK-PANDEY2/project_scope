@@ -9,7 +9,13 @@ import {
   getDoc,
   getDocs,
 } from "firebase/firestore";
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import {
+  getAuth,
+  signInWithPopup,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  signOut,
+} from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_apiKey,
@@ -28,23 +34,27 @@ const db = getFirestore(app);
 
 const auth = getAuth();
 
+// onAuthStateChanged(auth, (user) => {
+//   if (user) {
+//     localStorage.setItem("user", JSON.stringify(user));
+//   } else {
+//     localStorage.removeItem("user");
+//   }
+// });
+
 export async function SignInPopup() {
   try {
     const response = await signInWithPopup(auth, provider);
     const credential = GoogleAuthProvider.credentialFromResult(response);
     const token = credential.accessToken;
     const userData = response.user;
+
     await setDoc(doc(db, "users", userData.uid), {
       uid: userData.uid,
       email: userData.email,
       username: userData.displayName,
     });
-    const userDetails = {
-      uid: userData.uid,
-      email: userData.email,
-      username: userData.displayName,
-    };
-    return userDetails;
+    return "success";
   } catch (error) {
     const errorCode = error.code;
     const errorMessage = error.message;
@@ -65,6 +75,7 @@ export async function LoginPopup() {
       email: user.email,
       username: user.displayName,
     };
+    localStorage.setItem("user", JSON.stringify(user));
     return userDetails;
   } catch (error) {
     const errorCode = error.code;
@@ -72,5 +83,16 @@ export async function LoginPopup() {
     const email = error.customData.email;
     const credential = GoogleAuthProvider.credentialFromError(error);
     console.log(errorMessage);
+  }
+}
+
+export async function logout() {
+  try {
+    await signOut(auth);
+    localStorage.removeItem("user");
+    return "success";
+  } catch (e) {
+    console.log(e);
+    return "failed";
   }
 }

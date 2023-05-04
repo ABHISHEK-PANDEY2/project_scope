@@ -7,10 +7,11 @@ import { LoginPopup } from "../../configs/firebase.config";
 import { useUserAuth } from "../../context/userAuthContext";
 
 const Login = () => {
-  const { user, setUser } = useUserAuth();
+  const { setUser } = useUserAuth();
   const navigate = useNavigate();
   const handleClick = async () => {
-    const user = await LoginPopup();
+    await LoginPopup();
+    const user = JSON.parse(localStorage.getItem("user"));
     setUser(user);
     navigate("/");
   };
